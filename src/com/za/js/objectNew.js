@@ -4,6 +4,11 @@ function newObj() {
     // let obj = Object.create(Constructor.constructor);
     let obj = {};
     obj.__proto__ = constructor.prototype;
+    /**
+     * var F = function(){}
+     * F.prototype = constructor.prototype
+     * obj = new F();
+     */
     //obj绑定到构造函数上，便可以访问构造函数中的属性
     let result = constructor.apply(obj, arguments)
     //如果返回的result是一个对象则返回该对象，new方法失效，否则返回obj

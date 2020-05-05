@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<script type="javascript">
+    function deepClone(x) {
+        // =============
+        const uniqueList = new WeakMap(); // 用来去重
+        // =============
+        let root = {};
+        // 循环数组
+        const loopList = [
+            {
+                parent: root,
+                key: undefined,
+                data: x,
+            }
+        ];
+        while (loopList.length) {
+            // 深度优先
+            const node = loopList.pop();
+            const parent = node.parent;
+            const key = node.key;
+            const data = node.data;
+
+            // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
+            let res = parent;
+            if (typeof key !== 'undefined') {
+                res = parent[key] = Array.isArray(data) ? [] : {};
+            }
+            // =============
+            // 数据已经存在
+            if (uniqueList.has(data)) {
+                parent[key] = uniqueList.get(data);
+                break; // 中断本次循环
+            }
+            // 数据不存在
+            // 保存源数据，在拷贝数据中对应的引用
+            uniqueList.set(data, res);
+            // =============
+            for (let k in data) {
+                if (data.hasOwnProperty(k)) {
+                    if (typeof data[k] === 'object') {
+                        // 下一次循环
+                        loopList.push({
+                            parent: res,
+                            key: k,
+                            data: data[k],
+                        });
+                    } else {
+                        res[k] = data[k];
+                    }
+                }
+            }
+        }
+        return root;
+    }
+
+    function isObject(source) {
+        return typeof source === 'object' && source !== null;
+    }
+
+    (function test() {
+        var obj = {
+            a: 1,
+            b: '2',
+            c: [1, 2, 3],
+            // d: {
+            //     e: 1,
+            //     f: '2',
+            //     g: {},
+            //     h: {
+            //         i: 1,
+            //         j: '2'
+            //     }
+            // }
+        }
+        // obj.d.g = obj;
+        var newObj = deepClone(obj);
+        console.log(newObj);
+    })();
+</script>
+<style type="text/css">
+    .flex {
+        display: flex;
+        width: 300px;
+        /*height: 300px;*/
+        height: 300px;
+        flex-wrap: wrap;
+        /*align-content: flex-start;      */
+        /*box-sizing: border-box;*/
+    }
+
+    .flex > div {
+        display: inline-block;
+        box-sizing: content-box;
+        padding: 1px;
+        height: 100px;
+        width: 100px;
+        margin: -1px;
+        line-height: 100px;
+        text-align: center;
+        border: 1px solid #ccc;
+    }
+
+</style>
+<div class="flex">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>flex</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>
+    <div>9</div>
+</div>
+
+</html>

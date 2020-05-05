@@ -17,6 +17,7 @@ public class LeetCode206 {
         return pre;
     }
     public ListNode reverseList2(ListNode head) {
+        if(head == null) return null;
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
         ListNode pre = dummy;
